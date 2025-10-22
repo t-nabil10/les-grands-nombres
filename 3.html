@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparer deux nombres</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .properties-box {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #4CAF50;
+            margin: 15px 0;
+        }
+        .examples-box {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #ff9800;
+            margin: 15px 0;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .example-item {
+            margin: 12px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .number {
+            font-weight: bold;
+            color: #2196F3;
+        }
+        .rule-highlight {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .answer-btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 8px 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .answer-btn:hover {
+            background-color: #1976D2;
+        }
+        .solution {
+            background-color: #e8f5e9;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            display: none;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .solution.show {
+            display: block;
+        }
+        .properties-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .properties-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .properties-list li:before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .math-expression {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .comparison-result {
+            color: #e91e63;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .step-by-step {
+            background-color: #f1f8e9;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>3 Comparer deux nombres</h1>
+        </header>
+        
+        <div class="content">
+            <section class="section">
+            <h3 class="section-title">a) Propriétés :</h3>
+                <div class="properties-box">
+                    <ul class="properties-list">
+                        <li>S'ils n'ont pas le même nombre de chiffres, le plus petit est celui qui a le moins de chiffres</li>
+                        <li>S'ils ont autant de chiffres, on compare chaque chiffre en commençant par la gauche</li>
+                    </ul>
+                </div>
+                <h3 class="section-title">b) Exemples :</h3>
+                <div class="examples-box">
+                    <div class="example-item">
+                        <p><strong>1) Comparez les nombres suivants :</strong></p>
+                        
+                        <div class="example-item">
+                            <p><strong>(1)</strong> <span class="number">5 801</span> et <span class="number">5 815</span></p>
+                            <button class="answer-btn" onclick="toggleSolution('solution1')">Voir la solution</button>
+                            <div id="solution1" class="solution">
+                                <div class="step-by-step">
+                                    <p><strong>Étapes de comparaison :</strong></p>
+                                    <p>• Les deux nombres ont le même nombre de chiffres (4 chiffres)</p>
+                                    <p>• On compare chiffre par chiffre en commençant par la gauche :</p>
+                                    <p>  - Milliers : 5 = 5 ✓</p>
+                                    <p>  - Centaines : 8 = 8 ✓</p>
+                                    <p>  - Dizaines : 0 < 1 ✗</p>
+                                    <p>• Donc : 5 801 < 5 815</p>
+                                </div>
+                                <p><strong>Résultat :</strong> <span class="number">5 801</span> <span class="comparison-result">&lt;</span> <span class="number">5 815</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="example-item">
+                            <p><strong>(2)</strong> <span class="number">23 516</span> et <span class="number">210 309</span></p>
+                            <button class="answer-btn" onclick="toggleSolution('solution2')">Voir la solution</button>
+                            <div id="solution2" class="solution">
+                                <div class="step-by-step">
+                                    <p><strong>Étapes de comparaison :</strong></p>
+                                    <p>• Nombre de chiffres :</p>
+                                    <p>  - 23 516 → 5 chiffres</p>
+                                    <p>  - 210 309 → 6 chiffres</p>
+                                    <p>• Propriété : le nombre avec moins de chiffres est plus petit</p>
+                                    <p>• Donc : 23 516 < 210 309</p>
+                                </div>
+                                <p><strong>Résultat :</strong> <span class="number">23 516</span> <span class="comparison-result">&lt;</span> <span class="number">210 309</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="example-item">
+                            <p><strong>(3)</strong> <span class="number">891 975</span> et <span class="number">891 375</span></p>
+                            <button class="answer-btn" onclick="toggleSolution('solution3')">Voir la solution</button>
+                            <div id="solution3" class="solution">
+                                <div class="step-by-step">
+                                    <p><strong>Étapes de comparaison :</strong></p>
+                                    <p>• Les deux nombres ont le même nombre de chiffres (6 chiffres)</p>
+                                    <p>• On compare chiffre par chiffre en commençant par la gauche :</p>
+                                    <p>  - Centaines de mille : 8 = 8 ✓</p>
+                                    <p>  - Dizaines de mille : 9 = 9 ✓</p>
+                                    <p>  - Unités de mille : 1 = 1 ✓</p>
+                                    <p>  - Centaines : 9 > 3 ✗</p>
+                                    <p>• Donc : 891 975 > 891 375</p>
+                                </div>
+                                <p><strong>Résultat :</strong> <span class="number">891 975</span> <span class="comparison-result">&gt;</span> <span class="number">891 375</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <p><strong>2 Ranger les nombres suivants par ordre croissant (du plus petit au plus grand) :</strong></p>
+                        <div class="math-expression">5 801; 213 516; 6 815; 881 975; 210 309; 891 375</div>
+                        <button class="answer-btn" onclick="toggleSolution('solution4')">Voir la solution</button>
+                        <div id="solution4" class="solution">
+                            <div class="step-by-step">
+                                <p><strong>Étapes de classement :</strong></p>
+                                <p>1. Compter le nombre de chiffres de chaque nombre :</p>
+                                <p>   • 4 chiffres : 5 801, 6 815</p>
+                                <p>   • 6 chiffres : 213 516, 881 975, 210 309, 891 375</p>
+                                <p>2. Les nombres à 4 chiffres sont plus petits que ceux à 6 chiffres</p>
+                                <p>3. Comparer les nombres à 4 chiffres entre eux :</p>
+                                <p>   • 5 801 < 6 815 (comparaison des milliers)</p>
+                                <p>4. Comparer les nombres à 6 chiffres entre eux :</p>
+                                <p>   • 210 309 < 213 516 (comparaison des centaines de mille)</p>
+                                <p>   • 881 975 et 891 375 : 881 975 < 891 375 (comparaison des dizaines de mille)</p>
+                                <p>   • 213 516 < 881 975 (comparaison des centaines de mille)</p>
+                            </div>
+                            <p><strong>Ordre croissant :</strong></p>
+                            <div class="math-expression">
+                                5 801 &lt; 6 815 &lt; 210 309 &lt; 213 516 &lt; 881 975 &lt; 891 375
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        function toggleSolution(solutionId) {
+            const solution = document.getElementById(solutionId);
+            solution.classList.toggle('show');
+            
+            // Changer le texte du bouton
+            const button = solution.previousElementSibling;
+            if (solution.classList.contains('show')) {
+                button.textContent = 'Cacher la solution';
+                button.style.backgroundColor = '#f44336';
+            } else {
+                button.textContent = 'Voir la solution';
+                button.style.backgroundColor = '#2196F3';
+            }
+        }
+    </script>
+</body>
+</html>

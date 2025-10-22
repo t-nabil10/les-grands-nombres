@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Écrire les nombres</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .definition-box {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #4CAF50;
+            margin: 15px 0;
+        }
+        .rules-box {
+            background-color: #fff0f5;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #e91e63;
+            margin: 15px 0;
+        }
+        .examples-box {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #ff9800;
+            margin: 15px 0;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .example-item {
+            margin: 12px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .number {
+            font-weight: bold;
+            color: #2196F3;
+        }
+        .letters {
+            font-style: italic;
+            color: #e91e63;
+        }
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+        .rule-highlight {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .answer-btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 8px 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .answer-btn:hover {
+            background-color: #1976D2;
+        }
+        .solution {
+            background-color: #e8f5e9;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            display: none;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .solution.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>1 Écrire les nombres</h1>
+        </header>
+        
+        <div class="content">
+            <section class="section">
+              <h3 class="section-title">a) Définition :</h3>
+                <div class="definition-box">
+                    
+                    <p>0, 1, 2, 3, 4, 5, 6, 7, 8 et 9 sont les dix chiffres qui permettent d'écrire tous les nombres entiers, de même que les lettres de A à Z permettent d'écrire tous les mots.</p>
+                    
+                    <p>Un nombre peut s'écrire de différentes façons :</p>
+                    
+                    <ul>
+                        <li>En chiffres : <span class="number">2 159</span></li>
+                        <li>En lettres : <span class="letters">deux-mille-cent-cinquante-neuf</span></li>
+                        <li>Sous la forme d'une décomposition : <span class="number">2 milliers, 1 centaine, 5 dizaines et 9 unités</span></li>
+                    </ul>
+                </div>
+                <h3 class="section-title">b) Règles :</h3>
+                <div class="rules-box">
+                    
+                    <ul>
+                        <li>Quand on écrit un nombre en lettres, il faut penser à mettre un <span class="rule-highlight">TIRET ENTRE CHAQUE MOT</span></li>
+                        <li>Exemple : <span class="number">3 568</span> = <span class="letters">trois-mille-cinq-cent-soixante-huit</span></li>
+                        
+                        <li>Les mots <span class="rule-highlight">« VINGT »</span> et <span class="rule-highlight">« CENT »</span> prennent <span class="rule-highlight">UN « S »</span> quand ils sont <span class="rule-highlight">MULTIPLIÉS</span> et qu'il n'y a <span class="rule-highlight">RIEN DERRIÈRE</span></li>
+                        <li>Exemple : <span class="letters">quatre-vingts</span>, <span class="letters">six-cents</span></li>
+                        
+                        <li>Le mot <span class="rule-highlight">« MILLE »</span> <span class="rule-highlight">EST INVARIABLE</span> : son écriture ne change jamais.</li>
+                    </ul>
+                </div>
+                <h3 class="section-title">c) Exemples :</h3>
+                <div class="examples-box">
+                    
+                    <p>Écrire en toute lettre les nombres suivants :</p>
+                    
+                    <div class="example-item">
+                        <p><span class="number">1)</span> <span class="number">5 801</span></p>
+                        <p><span class="letters">Cinq-mille-huit-cent-un</span></p>
+                    </div>
+                    
+                    <div class="example-item">
+                        <p><span class="number">2)</span> <span class="number">4 320</span></p>
+                        <button class="answer-btn" onclick="toggleSolution('solution1')">Voir la solution</button>
+                        <div id="solution1" class="solution">
+                            <p><span class="letters">Quatre-mille-trois-cent-vingt</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <p><span class="number">3)</span> <span class="number">80</span></p>
+                        <button class="answer-btn" onclick="toggleSolution('solution2')">Voir la solution</button>
+                        <div id="solution2" class="solution">
+                            <p><span class="letters">Quatre-vingts</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <p><span class="number">4)</span> <span class="number">700</span></p>
+                        <button class="answer-btn" onclick="toggleSolution('solution3')">Voir la solution</button>
+                        <div id="solution3" class="solution">
+                            <p><span class="letters">Sept-cents</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <p><span class="number">5)</span> <span class="number">82</span></p>
+                        <button class="answer-btn" onclick="toggleSolution('solution4')">Voir la solution</button>
+                        <div id="solution4" class="solution">
+                            <p><span class="letters">Quatre-vingt-deux</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <p><span class="number">6)</span> <span class="number">605</span></p>
+                        <button class="answer-btn" onclick="toggleSolution('solution5')">Voir la solution</button>
+                        <div id="solution5" class="solution">
+                            <p><span class="letters">Six-cent-cinq</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        function toggleSolution(solutionId) {
+            const solution = document.getElementById(solutionId);
+            solution.classList.toggle('show');
+            
+            // Changer le texte du bouton
+            const button = solution.previousElementSibling;
+            if (solution.classList.contains('show')) {
+                button.textContent = 'Cacher la solution';
+                button.style.backgroundColor = '#f44336';
+            } else {
+                button.textContent = 'Voir la solution';
+                button.style.backgroundColor = '#2196F3';
+            }
+        }
+    </script>
+</body>
+</html>

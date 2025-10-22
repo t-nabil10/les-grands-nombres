@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Écrire les nombres</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .definition-box {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #4CAF50;
+            margin: 15px 0;
+        }
+        .rules-box {
+            background-color: #fff0f5;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #e91e63;
+            margin: 15px 0;
+        }
+        .examples-box {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #ff9800;
+            margin: 15px 0;
+        }
+        .property-box {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #4CAF50;
+            margin: 15px 0;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .example-item {
+            margin: 12px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .number {
+            font-weight: bold;
+            color: #2196F3;
+        }
+        .letters {
+            font-style: italic;
+            color: #e91e63;
+        }
+        .rule-highlight {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .answer-btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 8px 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .answer-btn:hover {
+            background-color: #1976D2;
+        }
+        .solution {
+            background-color: #e8f5e9;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            display: none;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .solution.show {
+            display: block;
+        }
+        .numeration-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .numeration-table th,
+        .numeration-table td {
+            border: 2px solid #333;
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .numeration-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        .class-header {
+            background-color: #e3f2fd;
+            font-weight: bold;
+        }
+        .unit-header {
+            background-color: #f3e5f5;
+        }
+        .value-cell {
+            background-color: #fff3e0;
+            font-style: italic;
+        }
+        .number-cell {
+            background-color: #e8f5e9;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .table-caption {
+            font-style: italic;
+            margin-bottom: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>2 Décomposition du nombre :</h1>
+        </header>
+        
+<h3 class="section-title">a) Propriété :</h3>
+                <div class="property-box">
+                    
+                    <p>On utilise un <span class="rule-highlight">TABLEAU DE NUMÉRATION</span> pour connaître la valeur de chaque chiffre.</p>
+                    
+                    <p class="table-caption">Exemple : je place 803 650.</p>
+                    
+                    <table class="numeration-table">
+                        <tr>
+                            <th colspan="3" class="class-header">Classe des mille</th>
+                            <th colspan="3" class="class-header">Classe des unités simples</th>
+                        </tr>
+                        <tr>
+                            <th class="unit-header">C</th>
+                            <th class="unit-header">D</th>
+                            <th class="unit-header">U</th>
+                            <th class="unit-header">C</th>
+                            <th class="unit-header">D</th>
+                            <th class="unit-header">U</th>
+                        </tr>
+                        <tr>
+                            <td class="value-cell">× 100</td>
+                            <td class="value-cell">× 10</td>
+                            <td class="value-cell">× 1</td>
+                            <td class="value-cell">× 100</td>
+                            <td class="value-cell">× 10</td>
+                            <td class="value-cell">× 1</td>
+                        </tr>
+                        <tr>
+                            <td class="number-cell">8</td>
+                            <td class="number-cell">0</td>
+                            <td class="number-cell">3</td>
+                            <td class="number-cell">6</td>
+                            <td class="number-cell">5</td>
+                            <td class="number-cell">0</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="example-item">
+                        <p><strong>Lecture du tableau :</strong></p>
+                        <ul>
+                            <li>Le chiffre 8 représente : 8 × 100 000 = 800 000</li>
+                            <li>Le chiffre 0 représente : 0 × 10 000 = 0</li>
+                            <li>Le chiffre 3 représente : 3 × 1 000 = 3 000</li>
+                            <li>Le chiffre 6 représente : 6 × 100 = 600</li>
+                            <li>Le chiffre 5 représente : 5 × 10 = 50</li>
+                            <li>Le chiffre 0 représente : 0 × 1 = 0</li>
+                        </ul>
+                        <p><strong>Total : 800 000 + 0 + 3 000 + 600 + 50 + 0 = 803 650</strong></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        function toggleSolution(solutionId) {
+            const solution = document.getElementById(solutionId);
+            solution.classList.toggle('show');
+            
+            // Changer le texte du bouton
+            const button = solution.previousElementSibling;
+            if (solution.classList.contains('show')) {
+                button.textContent = 'Cacher la solution';
+                button.style.backgroundColor = '#f44336';
+            } else {
+                button.textContent = 'Voir la solution';
+                button.style.backgroundColor = '#2196F50';
+            }
+        }
+    </script>
+</body>
+</html>
