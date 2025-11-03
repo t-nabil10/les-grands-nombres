@@ -269,7 +269,7 @@
             font-size: 0.9rem;
         }
         
-        .student-form-container {
+        .student-form-container, .homework-form-container {
             display: none;
             margin-top: 20px;
             padding: 20px;
@@ -278,7 +278,7 @@
             background-color: #f9f9f9;
         }
         
-        .student-form-container.active {
+        .student-form-container.active, .homework-form-container.active {
             display: block;
         }
         
@@ -413,6 +413,27 @@
             border-radius: 5px;
             margin: 10px 0;
         }
+
+        .grades-container {
+            margin-top: 20px;
+        }
+
+        .grade-input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .competence-tag {
+            display: inline-block;
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin: 2px;
+        }
     </style>
 </head>
 <body>
@@ -472,7 +493,7 @@
             
             <div class="card">
                 <h3>Derniers devoirs ajoutés</h3>
-                <table>
+                <table id="recentHomeworksTable">
                     <thead>
                         <tr>
                             <th>Devoir</th>
@@ -481,19 +502,7 @@
                             <th>Moyenne</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Théorème de Pythagore</td>
-                            <td>4ème A</td>
-                            <td>15/10/2023</td>
-                            <td>13.5</td>
-                        </tr>
-                        <tr>
-                            <td>Équations du 1er degré</td>
-                            <td>3ème B</td>
-                            <td>12/10/2023</td>
-                            <td>15.2</td>
-                        </tr>
+                    <tbody id="recentHomeworksBody">
                     </tbody>
                 </table>
             </div>
@@ -537,10 +546,11 @@
                 </table>
             </div>
             
-            <!-- Formulaire d'ajout manuel -->
+            <!-- Formulaire d'ajout d'élèves -->
             <div class="student-form-container" id="studentFormContainer">
-                <h3>Ajouter un nouvel élève</h3>
+                <h3 id="studentFormTitle">Ajouter un nouvel élève</h3>
                 <form id="studentForm">
+                    <input type="hidden" id="studentId">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="lastName">Nom *</label>
@@ -604,12 +614,6 @@
                     <i class="fas fa-info-circle"></i>
                     Pour utiliser cette fonctionnalité, veuillez exécuter l'application sur un serveur web local.
                 </div>
-                
-                <div class="file-upload-area" id="fileUploadArea">
-                    <i class="fas fa-file-excel"></i>
-                    <h4>Fonctionnalité serveur requise</h4>
-                    <p>L'importation Excel nécessite un environnement serveur</p>
-                </div>
             </div>
         </div>
         
@@ -625,33 +629,106 @@
                     </button>
                 </div>
                 
-                <table>
+                <table id="homeworksTable">
                     <thead>
                         <tr>
                             <th>Titre</th>
                             <th>Classe</th>
                             <th>Date</th>
+                            <th>Compétences</th>
                             <th>Note sur</th>
                             <th>Moyenne</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Théorème de Pythagore</td>
-                            <td>4ème A</td>
-                            <td>15/10/2023</td>
-                            <td>20</td>
-                            <td>13.5</td>
-                        </tr>
-                        <tr>
-                            <td>Équations du 1er degré</td>
-                            <td>3ème B</td>
-                            <td>12/10/2023</td>
-                            <td>20</td>
-                            <td>15.2</td>
-                        </tr>
+                    <tbody id="homeworksTableBody">
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- Formulaire d'ajout de devoir -->
+            <div class="homework-form-container" id="homeworkFormContainer">
+                <h3 id="homeworkFormTitle">Nouveau devoir</h3>
+                <form id="homeworkForm">
+                    <input type="hidden" id="homeworkId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="homeworkTitle">Titre du devoir *</label>
+                            <input type="text" id="homeworkTitle" placeholder="Ex: Théorème de Pythagore" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="homeworkClass">Classe *</label>
+                            <select id="homeworkClass" required>
+                                <option value="">Sélectionnez une classe</option>
+                                <option value="4ème A">4ème A</option>
+                                <option value="4ème B">4ème B</option>
+                                <option value="3ème A">3ème A</option>
+                                <option value="3ème B">3ème B</option>
+                                <option value="2nde">Seconde</option>
+                                <option value="1ère">Première</option>
+                                <option value="Terminale">Terminale</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="homeworkDate">Date du devoir *</label>
+                            <input type="date" id="homeworkDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxScore">Note sur *</label>
+                            <input type="number" id="maxScore" min="1" max="100" value="20" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="competences">Compétences évaluées</label>
+                        <input type="text" id="competences" placeholder="Ex: Géométrie, Calcul, Résolution de problèmes">
+                        <small>Séparez les compétences par des virgules</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="homeworkDescription">Description (optionnel)</label>
+                        <textarea id="homeworkDescription" rows="3" placeholder="Description du devoir..."></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Enregistrer
+                        </button>
+                        <button type="button" class="btn btn-danger" id="cancelHomeworkBtn">
+                            <i class="fas fa-times"></i> Annuler
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Saisie des notes -->
+            <div class="card grades-container" id="gradesContainer" style="display: none;">
+                <h3 id="gradesTitle">Saisir les notes</h3>
+                <div class="form-group">
+                    <label for="homeworkSelect">Sélectionnez un devoir</label>
+                    <select id="homeworkSelect">
+                        <option value="">Choisissez un devoir</option>
+                    </select>
+                </div>
+                
+                <table id="gradesTable">
+                    <thead>
+                        <tr>
+                            <th>Élève</th>
+                            <th>Note</th>
+                            <th>Commentaire</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gradesTableBody">
+                    </tbody>
+                </table>
+                
+                <button class="btn btn-success" id="saveGradesBtn" style="margin-top: 15px;">
+                    <i class="fas fa-save"></i> Enregistrer les notes
+                </button>
             </div>
         </div>
         
@@ -660,17 +737,24 @@
             <h2><i class="fas fa-calendar-alt"></i> Planning</h2>
             
             <div class="card">
+                <h3>Prochains devoirs</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Devoir</th>
+                            <th>Classe</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="upcomingHomeworksBody">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
                 <h3>Travail à faire pour les élèves</h3>
-                <ul style="list-style-type: none;">
-                    <li style="padding: 10px; border-bottom: 1px solid #eee;">
-                        <strong>Pour le 20/10 :</strong> Exercices 1 à 5 page 124 - Trigonométrie (4ème A)
-                    </li>
-                    <li style="padding: 10px; border-bottom: 1px solid #eee;">
-                        <strong>Pour le 23/10 :</strong> Révision chapitre 3 - Probabilités (3ème B)
-                    </li>
-                    <li style="padding: 10px;">
-                        <strong>Pour le 25/10 :</strong> Préparation contrôle - Dérivées (1ère)
-                    </li>
+                <ul style="list-style-type: none;" id="homeworkTasks">
                 </ul>
             </div>
         </div>
@@ -687,6 +771,32 @@
             { id: 2, lastName: 'Dubois', firstName: 'Thomas', class: '4ème A', gender: 'M', birthDate: '2009-07-22', average: 12.8 },
             { id: 3, lastName: 'Moreau', firstName: 'Camille', class: '3ème B', gender: 'F', birthDate: '2008-11-08', average: 14.5 },
             { id: 4, lastName: 'Petit', firstName: 'Hugo', class: '3ème B', gender: 'M', birthDate: '2008-05-30', average: 11.9 }
+        ];
+
+        // Données des devoirs
+        let homeworks = JSON.parse(localStorage.getItem('homeworks')) || [
+            { 
+                id: 1, 
+                title: 'Théorème de Pythagore', 
+                class: '4ème A', 
+                date: '2023-10-15', 
+                competences: ['Géométrie', 'Calcul'], 
+                maxScore: 20, 
+                description: 'Application du théorème de Pythagore',
+                average: 13.5,
+                grades: {}
+            },
+            { 
+                id: 2, 
+                title: 'Équations du 1er degré', 
+                class: '3ème B', 
+                date: '2023-10-12', 
+                competences: ['Algèbre', 'Résolution'], 
+                maxScore: 20, 
+                description: 'Résolution d\'équations du premier degré',
+                average: 15.2,
+                grades: {}
+            }
         ];
 
         // Fonction pour calculer l'âge
@@ -710,10 +820,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeTabs();
             initializeStudentsSection();
+            initializeHomeworksSection();
             updateStudentsTable();
+            updateHomeworksTable();
             updateStatistics();
+            updateRecentHomeworks();
+            updateUpcomingHomeworks();
             
-            // Avertissement pour Excel
             document.getElementById('excelWarning').style.display = 'block';
         });
 
@@ -745,6 +858,9 @@
             const excelImportContainer = document.getElementById('excelImportContainer');
             
             addStudentBtn.addEventListener('click', function() {
+                document.getElementById('studentFormTitle').textContent = 'Ajouter un nouvel élève';
+                studentForm.reset();
+                document.getElementById('studentId').value = '';
                 studentFormContainer.classList.add('active');
                 excelImportContainer.classList.remove('active');
             });
@@ -757,13 +873,18 @@
             studentForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
+                const studentId = document.getElementById('studentId').value;
                 const lastName = document.getElementById('lastName').value;
                 const firstName = document.getElementById('firstName').value;
                 const classValue = document.getElementById('class').value;
                 const birthDate = document.getElementById('birthDate').value;
                 const gender = document.querySelector('input[name="gender"]:checked').value;
                 
-                addStudent(lastName, firstName, classValue, gender, birthDate);
+                if (studentId) {
+                    updateStudent(parseInt(studentId), lastName, firstName, classValue, gender, birthDate);
+                } else {
+                    addStudent(lastName, firstName, classValue, gender, birthDate);
+                }
                 
                 studentForm.reset();
                 studentFormContainer.classList.remove('active');
@@ -776,6 +897,65 @@
             });
         }
 
+        // Gestion de la section devoirs
+        function initializeHomeworksSection() {
+            const addHomeworkBtn = document.getElementById('addHomeworkBtn');
+            const homeworkFormContainer = document.getElementById('homeworkFormContainer');
+            const cancelHomeworkBtn = document.getElementById('cancelHomeworkBtn');
+            const homeworkForm = document.getElementById('homeworkForm');
+            const homeworkSelect = document.getElementById('homeworkSelect');
+            const saveGradesBtn = document.getElementById('saveGradesBtn');
+            
+            addHomeworkBtn.addEventListener('click', function() {
+                document.getElementById('homeworkFormTitle').textContent = 'Nouveau devoir';
+                homeworkForm.reset();
+                document.getElementById('homeworkId').value = '';
+                document.getElementById('homeworkDate').valueAsDate = new Date();
+                homeworkFormContainer.classList.add('active');
+                document.getElementById('gradesContainer').style.display = 'none';
+            });
+            
+            cancelHomeworkBtn.addEventListener('click', function() {
+                homeworkFormContainer.classList.remove('active');
+                homeworkForm.reset();
+            });
+            
+            homeworkForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const homeworkId = document.getElementById('homeworkId').value;
+                const title = document.getElementById('homeworkTitle').value;
+                const classValue = document.getElementById('homeworkClass').value;
+                const date = document.getElementById('homeworkDate').value;
+                const maxScore = parseInt(document.getElementById('maxScore').value);
+                const competences = document.getElementById('competences').value.split(',').map(c => c.trim()).filter(c => c);
+                const description = document.getElementById('homeworkDescription').value;
+                
+                if (homeworkId) {
+                    updateHomework(parseInt(homeworkId), title, classValue, date, competences, maxScore, description);
+                } else {
+                    addHomework(title, classValue, date, competences, maxScore, description);
+                }
+                
+                homeworkForm.reset();
+                homeworkFormContainer.classList.remove('active');
+            });
+            
+            homeworkSelect.addEventListener('change', function() {
+                const homeworkId = parseInt(this.value);
+                if (homeworkId) {
+                    loadGradesForHomework(homeworkId);
+                    document.getElementById('gradesContainer').style.display = 'block';
+                } else {
+                    document.getElementById('gradesContainer').style.display = 'none';
+                }
+            });
+            
+            saveGradesBtn.addEventListener('click', function() {
+                saveGrades();
+            });
+        }
+
         function addStudent(lastName, firstName, classValue, gender, birthDate) {
             const newStudent = {
                 id: students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1,
@@ -784,13 +964,115 @@
                 class: classValue,
                 gender: gender,
                 birthDate: birthDate,
-                average: Math.random() * 10 + 8 // Moyenne aléatoire entre 8 et 18
+                average: 0
             };
             
             students.push(newStudent);
             saveStudents();
             updateStudentsTable();
             updateStatistics();
+        }
+
+        function updateStudent(id, lastName, firstName, classValue, gender, birthDate) {
+            const studentIndex = students.findIndex(s => s.id === id);
+            if (studentIndex !== -1) {
+                students[studentIndex] = {
+                    ...students[studentIndex],
+                    lastName,
+                    firstName,
+                    class: classValue,
+                    gender,
+                    birthDate
+                };
+                saveStudents();
+                updateStudentsTable();
+                updateStatistics();
+            }
+        }
+
+        function addHomework(title, classValue, date, competences, maxScore, description) {
+            const newHomework = {
+                id: homeworks.length > 0 ? Math.max(...homeworks.map(h => h.id)) + 1 : 1,
+                title: title,
+                class: classValue,
+                date: date,
+                competences: competences,
+                maxScore: maxScore,
+                description: description,
+                average: 0,
+                grades: {}
+            };
+            
+            homeworks.push(newHomework);
+            saveHomeworks();
+            updateHomeworksTable();
+            updateRecentHomeworks();
+            updateUpcomingHomeworks();
+            updateHomeworkSelect();
+        }
+
+        function updateHomework(id, title, classValue, date, competences, maxScore, description) {
+            const homeworkIndex = homeworks.findIndex(h => h.id === id);
+            if (homeworkIndex !== -1) {
+                homeworks[homeworkIndex] = {
+                    ...homeworks[homeworkIndex],
+                    title,
+                    class: classValue,
+                    date,
+                    competences,
+                    maxScore,
+                    description
+                };
+                saveHomeworks();
+                updateHomeworksTable();
+                updateRecentHomeworks();
+                updateUpcomingHomeworks();
+                updateHomeworkSelect();
+            }
+        }
+
+        function editStudent(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                document.getElementById('studentFormTitle').textContent = 'Modifier l\'élève';
+                document.getElementById('studentId').value = student.id;
+                document.getElementById('lastName').value = student.lastName;
+                document.getElementById('firstName').value = student.firstName;
+                document.getElementById('class').value = student.class;
+                document.getElementById('birthDate').value = student.birthDate;
+                document.querySelector(`input[name="gender"][value="${student.gender}"]`).checked = true;
+                
+                document.getElementById('studentFormContainer').classList.add('active');
+                document.getElementById('excelImportContainer').classList.remove('active');
+            }
+        }
+
+        function editHomework(id) {
+            const homework = homeworks.find(h => h.id === id);
+            if (homework) {
+                document.getElementById('homeworkFormTitle').textContent = 'Modifier le devoir';
+                document.getElementById('homeworkId').value = homework.id;
+                document.getElementById('homeworkTitle').value = homework.title;
+                document.getElementById('homeworkClass').value = homework.class;
+                document.getElementById('homeworkDate').value = homework.date;
+                document.getElementById('maxScore').value = homework.maxScore;
+                document.getElementById('competences').value = homework.competences.join(', ');
+                document.getElementById('homeworkDescription').value = homework.description || '';
+                
+                document.getElementById('homeworkFormContainer').classList.add('active');
+                document.getElementById('gradesContainer').style.display = 'none';
+            }
+        }
+
+        function deleteHomework(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce devoir ?')) {
+                homeworks = homeworks.filter(homework => homework.id !== id);
+                saveHomeworks();
+                updateHomeworksTable();
+                updateRecentHomeworks();
+                updateUpcomingHomeworks();
+                updateHomeworkSelect();
+            }
         }
         
         function updateStudentsTable() {
@@ -812,7 +1094,7 @@
                     </td>
                     <td>${student.average.toFixed(1)}</td>
                     <td>
-                        <button class="btn btn-primary" style="padding: 5px 10px; margin-right: 5px;">
+                        <button class="btn btn-primary" onclick="editStudent(${student.id})" style="padding: 5px 10px; margin-right: 5px;">
                             <i class="fas fa-edit"></i>
                         </button>
                         <button class="btn btn-danger delete-student" data-id="${student.id}" style="padding: 5px 10px;">
@@ -828,6 +1110,177 @@
                     const id = parseInt(this.getAttribute('data-id'));
                     deleteStudent(id);
                 });
+            });
+        }
+
+        function updateHomeworksTable() {
+            const tbody = document.getElementById('homeworksTableBody');
+            tbody.innerHTML = '';
+            
+            homeworks.forEach(homework => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${homework.title}</td>
+                    <td>${homework.class}</td>
+                    <td>${formatDate(homework.date)}</td>
+                    <td>
+                        ${homework.competences.map(comp => 
+                            `<span class="competence-tag">${comp}</span>`
+                        ).join('')}
+                    </td>
+                    <td>${homework.maxScore}</td>
+                    <td>${homework.average.toFixed(1)}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="editHomework(${homework.id})" style="padding: 5px 10px; margin-right: 5px;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteHomework(${homework.id})" style="padding: 5px 10px; margin-right: 5px;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="btn btn-success" onclick="showGrades(${homework.id})" style="padding: 5px 10px;">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showGrades(homeworkId) {
+            document.getElementById('homeworkSelect').value = homeworkId;
+            loadGradesForHomework(homeworkId);
+            document.getElementById('gradesContainer').style.display = 'block';
+            document.getElementById('homeworkFormContainer').style.display = 'none';
+        }
+
+        function loadGradesForHomework(homeworkId) {
+            const homework = homeworks.find(h => h.id === homeworkId);
+            if (!homework) return;
+
+            document.getElementById('gradesTitle').textContent = `Notes - ${homework.title} (${homework.class})`;
+            
+            const tbody = document.getElementById('gradesTableBody');
+            tbody.innerHTML = '';
+            
+            const classStudents = students.filter(student => student.class === homework.class);
+            
+            classStudents.forEach(student => {
+                const studentGrade = homework.grades[student.id] || { score: '', comment: '' };
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${student.lastName} ${student.firstName}</td>
+                    <td>
+                        <input type="number" class="grade-input" 
+                               data-student-id="${student.id}" 
+                               value="${studentGrade.score}" 
+                               min="0" max="${homework.maxScore}" 
+                               step="0.5" placeholder="Note">
+                        / ${homework.maxScore}
+                    </td>
+                    <td>
+                        <input type="text" class="grade-comment" 
+                               data-student-id="${student.id}" 
+                               value="${studentGrade.comment}" 
+                               placeholder="Commentaire optionnel" style="width: 100%;">
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function saveGrades() {
+            const homeworkId = parseInt(document.getElementById('homeworkSelect').value);
+            const homework = homeworks.find(h => h.id === homeworkId);
+            if (!homework) return;
+
+            const gradeInputs = document.querySelectorAll('.grade-input');
+            const commentInputs = document.querySelectorAll('.grade-comment');
+            
+            let totalScore = 0;
+            let gradedCount = 0;
+
+            gradeInputs.forEach(input => {
+                const studentId = parseInt(input.getAttribute('data-student-id'));
+                const score = parseFloat(input.value);
+                const comment = document.querySelector(`.grade-comment[data-student-id="${studentId}"]`).value;
+
+                if (!isNaN(score)) {
+                    homework.grades[studentId] = { score, comment };
+                    totalScore += score;
+                    gradedCount++;
+                }
+            });
+
+            // Calculer la moyenne
+            if (gradedCount > 0) {
+                homework.average = totalScore / gradedCount;
+            }
+
+            saveHomeworks();
+            updateHomeworksTable();
+            updateRecentHomeworks();
+            alert('Notes enregistrées avec succès !');
+        }
+
+        function updateHomeworkSelect() {
+            const select = document.getElementById('homeworkSelect');
+            select.innerHTML = '<option value="">Choisissez un devoir</option>';
+            
+            homeworks.forEach(homework => {
+                const option = document.createElement('option');
+                option.value = homework.id;
+                option.textContent = `${homework.title} - ${homework.class}`;
+                select.appendChild(option);
+            });
+        }
+
+        function updateRecentHomeworks() {
+            const tbody = document.getElementById('recentHomeworksBody');
+            tbody.innerHTML = '';
+            
+            const recentHomeworks = [...homeworks]
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
+            
+            recentHomeworks.forEach(homework => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${homework.title}</td>
+                    <td>${homework.class}</td>
+                    <td>${formatDate(homework.date)}</td>
+                    <td>${homework.average.toFixed(1)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateUpcomingHomeworks() {
+            const tbody = document.getElementById('upcomingHomeworksBody');
+            const tasksList = document.getElementById('homeworkTasks');
+            tbody.innerHTML = '';
+            tasksList.innerHTML = '';
+
+            const today = new Date();
+            const upcomingHomeworks = homeworks
+                .filter(h => new Date(h.date) >= today)
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            upcomingHomeworks.forEach(homework => {
+                const tr = document.createElement('tr');
+                const status = new Date(homework.date) > today ? 'À venir' : 'Aujourd\'hui';
+                tr.innerHTML = `
+                    <td>${homework.title}</td>
+                    <td>${homework.class}</td>
+                    <td>${formatDate(homework.date)}</td>
+                    <td>${status}</td>
+                `;
+                tbody.appendChild(tr);
+
+                const li = document.createElement('li');
+                li.style.padding = '10px';
+                li.style.borderBottom = '1px solid #eee';
+                li.innerHTML = `<strong>Pour le ${formatDate(homework.date)} :</strong> ${homework.title} - ${homework.class}`;
+                tasksList.appendChild(li);
             });
         }
         
@@ -898,6 +1351,13 @@
         function saveStudents() {
             localStorage.setItem('students', JSON.stringify(students));
         }
+
+        function saveHomeworks() {
+            localStorage.setItem('homeworks', JSON.stringify(homeworks));
+        }
+
+        // Initialiser le sélecteur de devoirs
+        updateHomeworkSelect();
     </script>
 </body>
 </html>
