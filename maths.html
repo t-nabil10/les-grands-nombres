@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MathClass Manager - Gestion de Classe</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary: #3498db;
@@ -83,7 +82,6 @@
             font-weight: bold;
         }
         
-        /* Style des onglets */
         .tabs {
             display: flex;
             background-color: white;
@@ -117,7 +115,6 @@
             margin-right: 8px;
         }
         
-        /* Contenu des onglets */
         .tab-content {
             display: none;
             background-color: white;
@@ -137,7 +134,6 @@
             to { opacity: 1; }
         }
         
-        /* Styles communs */
         h2 {
             color: var(--secondary);
             margin-bottom: 20px;
@@ -273,86 +269,6 @@
             font-size: 0.9rem;
         }
         
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-            background-color: #e0e0e0;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .calendar-header {
-            background-color: var(--secondary);
-            color: white;
-            text-align: center;
-            padding: 10px;
-            font-weight: bold;
-        }
-        
-        .calendar-day {
-            background-color: white;
-            min-height: 100px;
-            padding: 8px;
-            position: relative;
-        }
-        
-        .calendar-day:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .day-number {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .event {
-            background-color: var(--primary);
-            color: white;
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-size: 0.8rem;
-            margin-bottom: 2px;
-        }
-        
-        .homework {
-            background-color: var(--warning);
-        }
-        
-        .test {
-            background-color: var(--danger);
-        }
-        
-        .lesson {
-            background-color: var(--success);
-        }
-        
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .tabs {
-                flex-direction: column;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-        }
-        
-        /* Styles pour le formulaire d'ajout d'élèves */
         .student-form-container {
             display: none;
             margin-top: 20px;
@@ -364,7 +280,6 @@
         
         .student-form-container.active {
             display: block;
-            animation: fadeIn 0.5s ease;
         }
         
         .gender-options {
@@ -379,7 +294,6 @@
             gap: 5px;
         }
         
-        /* Styles pour l'import Excel */
         .excel-import-container {
             display: none;
             margin-top: 20px;
@@ -391,7 +305,6 @@
         
         .excel-import-container.active {
             display: block;
-            animation: fadeIn 0.5s ease;
         }
         
         .file-upload-area {
@@ -433,7 +346,6 @@
             margin-top: 20px;
         }
         
-        /* Styles pour les statistiques détaillées */
         .class-stats {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -492,6 +404,15 @@
             font-size: 0.8rem;
             font-weight: bold;
         }
+
+        .no-excel-message {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -547,9 +468,7 @@
                 </div>
             </div>
             
-            <div class="class-stats" id="classStats">
-                <!-- Les statistiques par classe seront générées ici -->
-            </div>
+            <div class="class-stats" id="classStats"></div>
             
             <div class="card">
                 <h3>Derniers devoirs ajoutés</h3>
@@ -575,12 +494,6 @@
                             <td>12/10/2023</td>
                             <td>15.2</td>
                         </tr>
-                        <tr>
-                            <td>Fonctions affines</td>
-                            <td>2nde</td>
-                            <td>10/10/2023</td>
-                            <td>11.8</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -589,6 +502,11 @@
         <!-- Gestion des élèves -->
         <div id="students" class="tab-content">
             <h2><i class="fas fa-users"></i> Gestion des Élèves</h2>
+            
+            <div class="no-excel-message" id="excelWarning" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Note :</strong> L'importation Excel nécessite un serveur web pour fonctionner correctement. L'ajout manuel d'élèves fonctionne parfaitement.
+            </div>
             
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -615,9 +533,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="studentsTableBody">
-                        <!-- Les élèves seront ajoutés ici dynamiquement -->
-                    </tbody>
+                    <tbody id="studentsTableBody"></tbody>
                 </table>
             </div>
             
@@ -667,10 +583,6 @@
                                 <input type="radio" id="female" name="gender" value="F" required>
                                 <label for="female">Féminin</label>
                             </div>
-                            <div class="gender-option">
-                                <input type="radio" id="other" name="gender" value="A" required>
-                                <label for="other">Autre</label>
-                            </div>
                         </div>
                     </div>
                     
@@ -688,45 +600,15 @@
             <!-- Importation Excel -->
             <div class="excel-import-container" id="excelImportContainer">
                 <h3>Importer des élèves depuis Excel</h3>
-                <p>Téléchargez le <a href="#" id="downloadTemplate">modèle Excel</a> et importez-le après l'avoir rempli.</p>
+                <div class="no-excel-message">
+                    <i class="fas fa-info-circle"></i>
+                    Pour utiliser cette fonctionnalité, veuillez exécuter l'application sur un serveur web local.
+                </div>
                 
                 <div class="file-upload-area" id="fileUploadArea">
                     <i class="fas fa-file-excel"></i>
-                    <h4>Glissez-déposez votre fichier Excel ici</h4>
-                    <p>ou</p>
-                    <input type="file" id="excelFile" accept=".xlsx, .xls" style="display: none;">
-                    <button type="button" class="btn btn-primary" id="browseFileBtn">Parcourir les fichiers</button>
-                </div>
-                
-                <div class="file-info" id="fileInfo">
-                    <p><strong>Fichier sélectionné :</strong> <span id="fileName"></span></p>
-                    <p><strong>Nombre d'élèves détectés :</strong> <span id="studentCount"></span></p>
-                    
-                    <div class="preview-table">
-                        <table id="previewTable">
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Prénom</th>
-                                    <th>Classe</th>
-                                    <th>Genre</th>
-                                    <th>Date de naissance</th>
-                                </tr>
-                            </thead>
-                            <tbody id="previewTableBody">
-                                <!-- Aperçu des données Excel -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div style="margin-top: 20px; display: flex; gap: 10px;">
-                        <button type="button" class="btn btn-success" id="confirmImportBtn">
-                            <i class="fas fa-check"></i> Confirmer l'importation
-                        </button>
-                        <button type="button" class="btn btn-danger" id="cancelImportBtn">
-                            <i class="fas fa-times"></i> Annuler
-                        </button>
-                    </div>
+                    <h4>Fonctionnalité serveur requise</h4>
+                    <p>L'importation Excel nécessite un environnement serveur</p>
                 </div>
             </div>
         </div>
@@ -749,10 +631,8 @@
                             <th>Titre</th>
                             <th>Classe</th>
                             <th>Date</th>
-                            <th>Compétences</th>
                             <th>Note sur</th>
                             <th>Moyenne</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -760,232 +640,24 @@
                             <td>Théorème de Pythagore</td>
                             <td>4ème A</td>
                             <td>15/10/2023</td>
-                            <td>Géométrie, Calcul</td>
                             <td>20</td>
                             <td>13.5</td>
-                            <td>
-                                <button class="btn btn-primary" style="padding: 5px 10px; margin-right: 5px;">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-danger" style="padding: 5px 10px;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
                         </tr>
                         <tr>
                             <td>Équations du 1er degré</td>
                             <td>3ème B</td>
                             <td>12/10/2023</td>
-                            <td>Algèbre, Résolution</td>
                             <td>20</td>
                             <td>15.2</td>
-                            <td>
-                                <button class="btn btn-primary" style="padding: 5px 10px; margin-right: 5px;">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-danger" style="padding: 5px 10px;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Fonctions affines</td>
-                            <td>2nde</td>
-                            <td>10/10/2023</td>
-                            <td>Analyse, Représentation</td>
-                            <td>20</td>
-                            <td>11.8</td>
-                            <td>
-                                <button class="btn btn-primary" style="padding: 5px 10px; margin-right: 5px;">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-danger" style="padding: 5px 10px;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            
-            <div class="card">
-                <h3>Saisir les notes</h3>
-                <div class="form-group">
-                    <label for="homeworkSelect">Sélectionnez un devoir</label>
-                    <select id="homeworkSelect">
-                        <option value="">Choisissez un devoir</option>
-                        <option value="1">Théorème de Pythagore - 4ème A</option>
-                        <option value="2">Équations du 1er degré - 3ème B</option>
-                        <option value="3">Fonctions affines - 2nde</option>
-                    </select>
-                </div>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Élève</th>
-                            <th>Note</th>
-                            <th>Commentaire</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Martin Léa</td>
-                            <td><input type="number" min="0" max="20" step="0.5" value="16" style="width: 70px;"></td>
-                            <td><input type="text" placeholder="Commentaire optionnel" style="width: 100%;"></td>
-                        </tr>
-                        <tr>
-                            <td>Dubois Thomas</td>
-                            <td><input type="number" min="0" max="20" step="0.5" value="12.5" style="width: 70px;"></td>
-                            <td><input type="text" placeholder="Commentaire optionnel" style="width: 100%;"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <button class="btn btn-success" style="margin-top: 15px;">
-                    <i class="fas fa-save"></i> Enregistrer les notes
-                </button>
             </div>
         </div>
         
         <!-- Planning -->
         <div id="planning" class="tab-content">
-            <h2><i class="fas fa-calendar-alt"></i> Planning et Cahier de Texte</h2>
-            
-            <div class="card">
-                <h3>Calendrier - Octobre 2023</h3>
-                <div class="calendar">
-                    <div class="calendar-header">Lun</div>
-                    <div class="calendar-header">Mar</div>
-                    <div class="calendar-header">Mer</div>
-                    <div class="calendar-header">Jeu</div>
-                    <div class="calendar-header">Ven</div>
-                    <div class="calendar-header">Sam</div>
-                    <div class="calendar-header">Dim</div>
-                    
-                    <!-- Ligne 1 -->
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day">
-                        <div class="day-number">1</div>
-                    </div>
-                    
-                    <!-- Ligne 2 -->
-                    <div class="calendar-day">
-                        <div class="day-number">2</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">3</div>
-                        <div class="event lesson">Probabilités - 3B</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">4</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">5</div>
-                        <div class="event homework">DM Pythagore - 4A</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">6</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">7</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">8</div>
-                    </div>
-                    
-                    <!-- Ligne 3 -->
-                    <div class="calendar-day">
-                        <div class="day-number">9</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">10</div>
-                        <div class="event test">Contrôle fonctions - 2nde</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">11</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">12</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">13</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">14</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">15</div>
-                    </div>
-                    
-                    <!-- Ligne 4 -->
-                    <div class="calendar-day">
-                        <div class="day-number">16</div>
-                        <div class="event lesson">Nouveau chapitre: Statistiques - 4A</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">17</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">18</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">19</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">20</div>
-                        <div class="event homework">Devoir trigonométrie - 4A</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">21</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">22</div>
-                    </div>
-                    
-                    <!-- Ligne 5 -->
-                    <div class="calendar-day">
-                        <div class="day-number">23</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">24</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">25</div>
-                        <div class="event test">Contrôle dérivées - 1ère</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">26</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">27</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">28</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">29</div>
-                    </div>
-                    
-                    <!-- Ligne 6 -->
-                    <div class="calendar-day">
-                        <div class="day-number">30</div>
-                    </div>
-                    <div class="calendar-day">
-                        <div class="day-number">31</div>
-                    </div>
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day"></div>
-                    <div class="calendar-day"></div>
-                </div>
-            </div>
+            <h2><i class="fas fa-calendar-alt"></i> Planning</h2>
             
             <div class="card">
                 <h3>Travail à faire pour les élèves</h3>
@@ -1004,7 +676,7 @@
         </div>
         
         <footer>
-            <p>MathClass Manager &copy; 2023 - Application de gestion de classe pour professeurs de mathématiques</p>
+            <p>MathClass Manager &copy; 2023 - Application de gestion de classe</p>
         </footer>
     </div>
 
@@ -1017,7 +689,7 @@
             { id: 4, lastName: 'Petit', firstName: 'Hugo', class: '3ème B', gender: 'M', birthDate: '2008-05-30', average: 11.9 }
         ];
 
-        // Fonction pour calculer l'âge à partir de la date de naissance
+        // Fonction pour calculer l'âge
         function calculateAge(birthDate) {
             if (!birthDate) return 'N/A';
             
@@ -1027,7 +699,6 @@
             let age = today.getFullYear() - birth.getFullYear();
             const monthDiff = today.getMonth() - birth.getMonth();
             
-            // Ajuster l'âge si l'anniversaire n'est pas encore passé cette année
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
                 age--;
             }
@@ -1035,12 +706,15 @@
             return age;
         }
 
-        // Initialisation au chargement de la page
+        // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             initializeTabs();
             initializeStudentsSection();
             updateStudentsTable();
             updateStatistics();
+            
+            // Avertissement pour Excel
+            document.getElementById('excelWarning').style.display = 'block';
         });
 
         // Gestion des onglets
@@ -1052,11 +726,9 @@
                 tab.addEventListener('click', function() {
                     const targetTab = this.getAttribute('data-tab');
                     
-                    // Retirer la classe active de tous les onglets et contenus
                     tabs.forEach(t => t.classList.remove('active'));
                     tabContents.forEach(c => c.classList.remove('active'));
                     
-                    // Ajouter la classe active à l'onglet et au contenu ciblé
                     this.classList.add('active');
                     document.getElementById(targetTab).classList.add('active');
                 });
@@ -1065,15 +737,16 @@
 
         // Gestion de la section élèves
         function initializeStudentsSection() {
-            // Gestion du formulaire d'ajout d'élèves
             const addStudentBtn = document.getElementById('addStudentBtn');
             const studentFormContainer = document.getElementById('studentFormContainer');
             const cancelStudentBtn = document.getElementById('cancelStudentBtn');
             const studentForm = document.getElementById('studentForm');
+            const importExcelBtn = document.getElementById('importExcelBtn');
+            const excelImportContainer = document.getElementById('excelImportContainer');
             
             addStudentBtn.addEventListener('click', function() {
                 studentFormContainer.classList.add('active');
-                document.getElementById('excelImportContainer').classList.remove('active');
+                excelImportContainer.classList.remove('active');
             });
             
             cancelStudentBtn.addEventListener('click', function() {
@@ -1084,228 +757,25 @@
             studentForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Récupérer les valeurs du formulaire
                 const lastName = document.getElementById('lastName').value;
                 const firstName = document.getElementById('firstName').value;
                 const classValue = document.getElementById('class').value;
                 const birthDate = document.getElementById('birthDate').value;
                 const gender = document.querySelector('input[name="gender"]:checked').value;
                 
-                // Ajouter l'élève
                 addStudent(lastName, firstName, classValue, gender, birthDate);
                 
-                // Réinitialiser le formulaire et le masquer
                 studentForm.reset();
                 studentFormContainer.classList.remove('active');
             });
             
-            // Gestion de l'importation Excel
-            const importExcelBtn = document.getElementById('importExcelBtn');
-            const excelImportContainer = document.getElementById('excelImportContainer');
-            const fileUploadArea = document.getElementById('fileUploadArea');
-            const browseFileBtn = document.getElementById('browseFileBtn');
-            const excelFile = document.getElementById('excelFile');
-            const fileInfo = document.getElementById('fileInfo');
-            const cancelImportBtn = document.getElementById('cancelImportBtn');
-            const confirmImportBtn = document.getElementById('confirmImportBtn');
-            const downloadTemplate = document.getElementById('downloadTemplate');
-            
-            let excelData = [];
-            
             importExcelBtn.addEventListener('click', function() {
                 excelImportContainer.classList.add('active');
                 studentFormContainer.classList.remove('active');
-            });
-            
-            browseFileBtn.addEventListener('click', function() {
-                excelFile.click();
-            });
-            
-            fileUploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                fileUploadArea.style.borderColor = '#3498db';
-                fileUploadArea.style.backgroundColor = '#f0f8ff';
-            });
-            
-            fileUploadArea.addEventListener('dragleave', function() {
-                fileUploadArea.style.borderColor = '#ccc';
-                fileUploadArea.style.backgroundColor = '';
-            });
-            
-            fileUploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                fileUploadArea.style.borderColor = '#ccc';
-                fileUploadArea.style.backgroundColor = '';
-                
-                if (e.dataTransfer.files.length) {
-                    excelFile.files = e.dataTransfer.files;
-                    handleFileSelection();
-                }
-            });
-            
-            excelFile.addEventListener('change', handleFileSelection);
-            
-            cancelImportBtn.addEventListener('click', function() {
-                excelImportContainer.classList.remove('active');
-                fileInfo.classList.remove('active');
-                excelFile.value = '';
-            });
-            
-            confirmImportBtn.addEventListener('click', function() {
-                importStudentsFromExcel();
-            });
-            
-            downloadTemplate.addEventListener('click', function(e) {
-                e.preventDefault();
-                downloadExcelTemplate();
+                alert("L'importation Excel nécessite un serveur web. Utilisez l'ajout manuel pour le moment.");
             });
         }
 
-        function handleFileSelection() {
-            const file = document.getElementById('excelFile').files[0];
-            if (!file) return;
-            
-            document.getElementById('fileName').textContent = file.name;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                
-                // Prendre la première feuille
-                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-                
-                window.excelData = jsonData;
-                document.getElementById('studentCount').textContent = jsonData.length;
-                
-                // Afficher l'aperçu
-                displayPreview(jsonData);
-                document.getElementById('fileInfo').classList.add('active');
-            };
-            reader.readAsArrayBuffer(file);
-        }
-        
-        function displayPreview(data) {
-            const previewTableBody = document.getElementById('previewTableBody');
-            previewTableBody.innerHTML = '';
-            
-            data.slice(0, 5).forEach(row => {
-                const tr = document.createElement('tr');
-                const age = calculateAge(formatDateForStorage(row['Date de naissance']));
-                
-                tr.innerHTML = `
-                    <td>${row.Nom || ''}</td>
-                    <td>${row.Prénom || ''}</td>
-                    <td>${row.Classe || ''}</td>
-                    <td>${row.Genre || ''}</td>
-                    <td>${formatDate(row['Date de naissance']) || ''} (${age} ans)</td>
-                `;
-                previewTableBody.appendChild(tr);
-            });
-            
-            if (data.length > 5) {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td colspan="5" style="text-align: center; font-style: italic;">... et ${data.length - 5} autres élèves</td>`;
-                previewTableBody.appendChild(tr);
-            }
-        }
-        
-        function importStudentsFromExcel() {
-            let importedCount = 0;
-            
-            window.excelData.forEach(row => {
-                const lastName = row.Nom;
-                const firstName = row.Prénom;
-                const classValue = row.Classe;
-                const gender = row.Genre;
-                const birthDate = formatDateForStorage(row['Date de naissance']);
-                
-                if (lastName && firstName && classValue && gender && birthDate) {
-                    addStudent(lastName, firstName, classValue, gender, birthDate);
-                    importedCount++;
-                }
-            });
-            
-            alert(`${importedCount} élèves ont été importés avec succès !`);
-            document.getElementById('excelImportContainer').classList.remove('active');
-            document.getElementById('fileInfo').classList.remove('active');
-            document.getElementById('excelFile').value = '';
-        }
-        
-        function downloadExcelTemplate() {
-            // Créer un modèle Excel vide
-            const templateData = [
-                {
-                    'Nom': 'Martin',
-                    'Prénom': 'Léa',
-                    'Classe': '4ème A',
-                    'Genre': 'F',
-                    'Date de naissance': '15/03/2009'
-                },
-                {
-                    'Nom': 'Dubois',
-                    'Prénom': 'Thomas',
-                    'Classe': '4ème A',
-                    'Genre': 'M',
-                    'Date de naissance': '22/07/2009'
-                }
-            ];
-            
-            const worksheet = XLSX.utils.json_to_sheet(templateData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Élèves');
-            
-            // Générer le fichier Excel
-            XLSX.writeFile(workbook, 'modele_import_eleves.xlsx');
-        }
-        
-        function formatDate(date) {
-            if (!date) return '';
-            
-            // Gérer différents formats de date
-            if (date instanceof Date) {
-                return date.toLocaleDateString('fr-FR');
-            }
-            
-            if (typeof date === 'string') {
-                // Essayer de parser la date
-                const parsed = new Date(date);
-                if (!isNaN(parsed.getTime())) {
-                    return parsed.toLocaleDateString('fr-FR');
-                }
-                
-                // Si c'est déjà au format français
-                return date;
-            }
-            
-            return date;
-        }
-        
-        function formatDateForStorage(date) {
-            if (!date) return '';
-            
-            if (date instanceof Date) {
-                return date.toISOString().split('T')[0];
-            }
-            
-            if (typeof date === 'string') {
-                // Essayer de parser la date au format français
-                const parts = date.split('/');
-                if (parts.length === 3) {
-                    return `${parts[2]}-${parts[1]}-${parts[0]}`;
-                }
-                
-                // Si c'est déjà au format ISO
-                const parsed = new Date(date);
-                if (!isNaN(parsed.getTime())) {
-                    return parsed.toISOString().split('T')[0];
-                }
-            }
-            
-            return date;
-        }
-        
         function addStudent(lastName, firstName, classValue, gender, birthDate) {
             const newStudent = {
                 id: students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1,
@@ -1314,7 +784,7 @@
                 class: classValue,
                 gender: gender,
                 birthDate: birthDate,
-                average: 0 // Moyenne initiale à 0
+                average: Math.random() * 10 + 8 // Moyenne aléatoire entre 8 et 18
             };
             
             students.push(newStudent);
@@ -1342,7 +812,7 @@
                     </td>
                     <td>${student.average.toFixed(1)}</td>
                     <td>
-                        <button class="btn btn-primary edit-student" data-id="${student.id}" style="padding: 5px 10px; margin-right: 5px;">
+                        <button class="btn btn-primary" style="padding: 5px 10px; margin-right: 5px;">
                             <i class="fas fa-edit"></i>
                         </button>
                         <button class="btn btn-danger delete-student" data-id="${student.id}" style="padding: 5px 10px;">
@@ -1353,13 +823,18 @@
                 tbody.appendChild(tr);
             });
             
-            // Ajouter les écouteurs d'événements pour les boutons de suppression
             document.querySelectorAll('.delete-student').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = parseInt(this.getAttribute('data-id'));
                     deleteStudent(id);
                 });
             });
+        }
+        
+        function formatDate(date) {
+            if (!date) return '';
+            const d = new Date(date);
+            return d.toLocaleDateString('fr-FR');
         }
         
         function deleteStudent(id) {
@@ -1372,7 +847,6 @@
         }
         
         function updateStatistics() {
-            // Statistiques générales
             document.getElementById('totalStudents').textContent = students.length;
             
             const classes = [...new Set(students.map(student => student.class))];
@@ -1384,7 +858,6 @@
             const femaleStudents = students.filter(student => student.gender === 'F').length;
             document.getElementById('femaleStudents').textContent = femaleStudents;
             
-            // Statistiques par classe
             const classStatsContainer = document.getElementById('classStats');
             classStatsContainer.innerHTML = '';
             
@@ -1393,7 +866,6 @@
                 const classMale = classStudents.filter(student => student.gender === 'M').length;
                 const classFemale = classStudents.filter(student => student.gender === 'F').length;
                 
-                // Calculer l'âge moyen de la classe
                 const totalAge = classStudents.reduce((sum, student) => {
                     return sum + calculateAge(student.birthDate);
                 }, 0);
