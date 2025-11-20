@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Organisation des Données - CM1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Neue', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .lesson-card {
+            background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .lesson-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px dashed #3498db;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        h2 {
+            color: #e74c3c;
+            margin: 25px 0 18px 0;
+            font-size: 1.7rem;
+            padding: 10px 15px;
+            background-color: #ffeaa7;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: #e74c3c;
+        }
+        
+        h3 {
+            color: #2980b9;
+            margin: 20px 0 15px 0;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .rule-box {
+            background: linear-gradient(to right, #d4edda, #c3e6cb);
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 15px 15px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .example-box {
+            background: linear-gradient(to right, #e3f2fd, #bbdefb);
+            border: 2px solid #2196f3;
+            border-radius: 15px;
+            padding: 22px;
+            margin: 22px 0;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.2);
+        }
+        
+        .data-sample {
+            background: linear-gradient(to right, #fff3cd, #ffeaa7);
+            padding: 18px;
+            border-radius: 12px;
+            margin: 18px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            white-space: nowrap;
+            border: 2px dashed #f39c12;
+            font-weight: bold;
+            color: #d35400;
+        }
+        
+        .questions {
+            margin: 25px 0;
+        }
+        
+        .question {
+            margin-bottom: 18px;
+            padding: 16px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            counter-increment: question-counter;
+            border-left: 5px solid #9b59b6;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .question:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .question:before {
+            content: counter(question-counter);
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .questions {
+            counter-reset: question-counter;
+        }
+        
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        .note {
+            background: linear-gradient(to right, #fff3cd, #ffeaa7);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #ffc107;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .note i {
+            color: #ff9800;
+            font-size: 1.8rem;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #bdc3c7;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .emoji {
+            font-size: 1.5rem;
+            margin: 0 5px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .lesson-card {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.9rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .lesson-card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            h3 {
+                font-size: 1.2rem;
+            }
+            
+            .rule-box, .example-box {
+                padding: 15px;
+            }
+            
+            .question {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .lesson-card {
+                padding: 15px;
+            }
+            
+            .data-sample {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            h2, h3 {
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lesson-card">
+            <div class="header">
+                <h1>📊 Organisation et traitement des données</h1>
+                <p class="subtitle">Leçon de mathématiques pour le CM1</p>
+            </div>
+            
+            <section>
+                <h2><i class="fas fa-table"></i> Tableaux</h2>
+                
+                <div class="rule-box">
+                    <h3><i class="fas fa-ruler-combined"></i> a) Règle :</h3>
+                    <p>Un tableau permet de regrouper et d'organiser des données, de lire facilement des informations. <span class="emoji">📈</span></p>
+                </div>
+                
+                <div class="example-box">
+                    <h3><i class="fas fa-lightbulb"></i> b) Exemple :</h3>
+                    <p>Dans un immeuble <span class="emoji">🏢</span>, on a relevé le nombre de pièces de chaque appartement. On note T1 pour 1 pièce, T2 pour 2 pièces, etc. Voici les relevés :</p>
+                    
+                    <div class="data-sample">
+                        <i class="fas fa-list"></i> T2 - T4 - T4 - T1 - T1 - T2 - T3 - T1 - T5 - T3 - T2 - T1 - T2 - T3 - T1 - T1 - T2 - T4 - T2 - T1 - T2 - T3 - T1 - T2 - T2 - T5 - T1 - T2 - T5 - T2 - T1 - T3
+                    </div>
+                    
+                    <div class="questions">
+                        <div class="question">
+                            <span>Présenter ces relevés dans un tableau <span class="emoji">📋</span></span>
+                        </div>
+                        <div class="question">
+                            <span>Quel type d'appartement est le plus représenté dans cet immeuble? <span class="emoji">🤔</span></span>
+                        </div>
+                        <div class="question">
+                            <span>Combien d'appartements comporte cet immeuble? <span class="emoji">🔢</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <i class="fas fa-lightbulb"></i>
+                    <div>
+                        <strong>Astuce :</strong> Pour compter plus facilement, regroupe les appartements par type (T1, T2, T3, etc.) avant de créer ton tableau !
+                    </div>
+                </div>
+            </section>
+            
+            <div class="footer">
+                <p><i class="fas fa-graduation-cap"></i> Leçon de mathématiques CM1 - Bon courage ! <span class="emoji">✨</span></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
